@@ -16,21 +16,41 @@
             background-color: #f9fafb;
         }
 
-        /* 상단 메뉴바 (모던 대시보드 스타일) */
+        /* 상단 메뉴바 (3분할 밸런스 구조: 좌측여백 / 중앙메뉴 / 우측스위치) */
         .navbar {
             background-color: #ffffff;
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 8px; /* 메뉴 간격 */
+            justify-content: space-between;
             padding: 10px 20px;
             border-bottom: 1px solid #e5e7eb;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
             flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* 좌측 균형용 스페이서 (우측 토글 영역과 동일한 너비/공간 차지) */
+        .nav-spacer {
+            display: flex;
+            align-items: center;
+            visibility: hidden; /* 보이지 않게 처리하되 공간은 차지함 */
+            user-select: none;
+            padding-right: 16px;
+        }
+
+        /* 중앙 메뉴 링크 그룹 */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex-grow: 1;
         }
 
         /* 메뉴 버튼 스타일 (라운드 탭 형태) */
-        .navbar a {
+        .nav-links a {
             display: flex;
             align-items: center;
             color: #4b5563;
@@ -43,16 +63,72 @@
         }
 
         /* 마우스 올렸을 때 */
-        .navbar a:hover {
+        .nav-links a:hover {
             background-color: #f3f4f6;
             color: #111827;
         }
 
         /* 클릭한(활성화된) 메뉴 유지 스타일 */
-        .navbar a.active-link {
+        .nav-links a.active-link {
             background-color: #eff6ff; /* 연한 블루 배경 */
             color: #2563eb;          /* 포인트 블루 텍스트 */
             font-weight: 600;
+        }
+
+        /* 우측 새창 열기 스위치 영역 스타일 */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13.5px;
+            color: #4b5563;
+            user-select: none;
+            padding-left: 16px;
+            border-left: 1px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+
+        /* 스위치 디자인 (CSS Toggle) */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 38px;
+            height: 22px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .2s;
+            border-radius: 22px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .2s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #2563eb;
+        }
+        input:checked + .slider:before {
+            transform: translateX(16px);
+        }
+
+        /* 모바일 화면에서 줄바꿈 대응용 밸런스 조정 */
+        @media (max-width: 768px) {
+            .nav-spacer { display: none; }
         }
 
         /* 하단 콘텐츠 창 영역 스타일 */
@@ -67,25 +143,60 @@
 <body>
 
     <!-- 상단 메뉴바 -->
-    <nav class="navbar" id="navbar">
-        <a href="https://www.daum.net" target="content-window" class="active-link">1. 특별실 예약</a>
-        <a href="https://docs.google.com/spreadsheets/d/1G253TyOfPWsYgZmuULGvrJhJi4W1X3MGIXGfW_BPFRk/edit?pli=1&gid=0#gid=0" target="content-window">2. 개별화교육</a>
-        <a href="https://docs.google.com/spreadsheets/d/1cmGEgyH_C6u1deECFZOlCGaT7ilFVRtVsh6vgWbT6m4/edit?gid=1317717015#gid=1317717015" target="content-window">3. 돌봄&방과후</a>
-        <a href="https://padlet.com/paparo09/2026-b4i26qmywba85v35" target="content-window">4. 연수자료</a>
-    </nav>
+    <header class="navbar" id="navbar">
+        <!-- 좌측 밸런스 맞춤용 (우측 스위치와 크기 맞춤) -->
+        <div class="nav-spacer" aria-hidden="true">
+            <span style="visibility: hidden;">스위치자리대체</span>
+        </div>
 
-    <!-- 하단 창 (첫 번째 링크와 초기화면 일치시킴) -->
+        <!-- 중앙 정렬된 메뉴 링크 그룹 -->
+        <div class="nav-links">
+            <a href="https://www.daum.net" target="content-window" class="active-link">1. 특별실 예약</a>
+            <a href="https://docs.google.com/spreadsheets/d/1G253TyOfPWsYgZmuULGvrJhJi4W1X3MGIXGfW_BPFRk/edit?pli=1&gid=0#gid=0" target="content-window">2. 개별화교육</a>
+            <a href="https://docs.google.com/spreadsheets/d/1cmGEgyH_C6u1deECFZOlCGaT7ilFVRtVsh6vgWbT6m4/edit?gid=1317717015#gid=1317717015" target="content-window">3. 늘봄&방과후</a>
+            <a href="https://padlet.com/paparo09/2026-b4i26qmywba85v35" target="content-window">4. 연수자료</a>
+        </div>
+        
+        <!-- 오른쪽 끝 새창 열기 토글 -->
+        <div class="toggle-container">
+            <label class="switch">
+                <input type="checkbox" id="newWindowToggle">
+                <span class="slider"></span>
+            </label>
+            <span>새창에서 열기</span>
+        </div>
+    </header>
+
+    <!-- 하단 창 -->
     <iframe name="content-window" class="content-frame" src="https://www.daum.net">
         이 브라우저는 iframe을 지원하지 않습니다.
     </iframe>
 
     <script>
-        const navLinks = document.querySelectorAll('.navbar a');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const toggle = document.getElementById('newWindowToggle');
 
+        // 1. localStorage에서 설정 불러오기 (기본값: false)
+        const savedNewWindow = localStorage.getItem('openInNewWindow') === 'true';
+        toggle.checked = savedNewWindow;
+
+        // 2. 스위치 변경 시 localStorage에 저장
+        toggle.addEventListener('change', function() {
+            localStorage.setItem('openInNewWindow', this.checked);
+        });
+
+        // 3. 링크 클릭 이벤트 제어
         navLinks.forEach(link => {
-            link.addEventListener('click', function() {
+            link.addEventListener('click', function(e) {
+                // 활성화(active) 탭 스타일 갱신
                 navLinks.forEach(item => item.classList.remove('active-link'));
                 this.classList.add('active-link');
+
+                // 새창 열기 모드가 켜져 있으면 iframe 로드 막고 새 탭으로 오픈
+                if (toggle.checked) {
+                    e.preventDefault();
+                    window.open(this.href, '_blank');
+                }
             });
         });
     </script>
