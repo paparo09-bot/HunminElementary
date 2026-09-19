@@ -30,11 +30,11 @@
             gap: 10px;
         }
 
-        /* 좌측 균형용 스페이서 (우측 토글 영역과 동일한 너비/공간 차지) */
+        /* 좌측 균형용 스페이서 */
         .nav-spacer {
             display: flex;
             align-items: center;
-            visibility: hidden; /* 보이지 않게 처리하되 공간은 차지함 */
+            visibility: hidden;
             user-select: none;
             padding-right: 16px;
         }
@@ -49,7 +49,7 @@
             flex-grow: 1;
         }
 
-        /* 메뉴 버튼 스타일 (라운드 탭 형태) */
+        /* 메뉴 버튼 스타일 */
         .nav-links a {
             display: flex;
             align-items: center;
@@ -62,16 +62,14 @@
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* 마우스 올렸을 때 */
         .nav-links a:hover {
             background-color: #f3f4f6;
             color: #111827;
         }
 
-        /* 클릭한(활성화된) 메뉴 유지 스타일 */
         .nav-links a.active-link {
-            background-color: #eff6ff; /* 연한 블루 배경 */
-            color: #2563eb;          /* 포인트 블루 텍스트 */
+            background-color: #eff6ff;
+            color: #2563eb;
             font-weight: 600;
         }
 
@@ -88,55 +86,73 @@
             flex-shrink: 0;
         }
 
-        /* 스위치 디자인 (CSS Toggle) */
+        /* 스위치 디자인 */
         .switch {
             position: relative;
             display: inline-block;
             width: 38px;
             height: 22px;
         }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+        .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #cbd5e1;
-            transition: .2s;
-            border-radius: 22px;
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1; transition: .2s; border-radius: 22px;
         }
         .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .2s;
-            border-radius: 50%;
+            position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+            background-color: white; transition: .2s; border-radius: 50%;
         }
-        input:checked + .slider {
-            background-color: #2563eb;
-        }
-        input:checked + .slider:before {
-            transform: translateX(16px);
-        }
+        input:checked + .slider { background-color: #2563eb; }
+        input:checked + .slider:before { transform: translateX(16px); }
 
-        /* 모바일 화면에서 줄바꿈 대응용 밸런스 조정 */
         @media (max-width: 768px) {
             .nav-spacer { display: none; }
         }
 
-        /* 하단 콘텐츠 창 영역 스타일 */
+        /* 하단 콘텐츠 컨테이너 (relative 기준) */
+        .content-container {
+            flex-grow: 1;
+            position: relative;
+            width: 100%;
+            display: flex;
+        }
+
+        /* 하단 iframe 창 */
         .content-frame {
             flex-grow: 1;
             width: 100%;
+            height: 100%;
             border: none;
             background-color: #ffffff;
+        }
+
+        /* 페이지 준비 중 안내 화면 스타일 */
+        .prep-message {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #f9fafb;
+            display: none; /* 기본 숨김 */
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        .prep-card {
+            background: #ffffff;
+            padding: 36px 48px;
+            border-radius: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            text-align: center;
+            border: 1px solid #e5e7eb;
+        }
+        .prep-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            color: #111827;
+        }
+        .prep-card p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14.5px;
         }
     </style>
 </head>
@@ -144,12 +160,10 @@
 
     <!-- 상단 메뉴바 -->
     <header class="navbar" id="navbar">
-        <!-- 좌측 밸런스 맞춤용 (우측 스위치와 크기 맞춤) -->
         <div class="nav-spacer" aria-hidden="true">
             <span style="visibility: hidden;">스위치자리대체</span>
         </div>
 
-        <!-- 중앙 정렬된 메뉴 링크 그룹 -->
         <div class="nav-links">
             <a href="https://www.daum.net" target="content-window" class="active-link">1. 특별실 예약</a>
             <a href="https://docs.google.com/spreadsheets/d/1G253TyOfPWsYgZmuULGvrJhJi4W1X3MGIXGfW_BPFRk/edit?pli=1&gid=0#gid=0" target="content-window">2. 개별화교육</a>
@@ -157,7 +171,6 @@
             <a href="https://padlet.com/paparo09/2026-b4i26qmywba85v35" target="content-window">4. 연수자료</a>
         </div>
         
-        <!-- 오른쪽 끝 새창 열기 토글 -->
         <div class="toggle-container">
             <label class="switch">
                 <input type="checkbox" id="newWindowToggle">
@@ -167,35 +180,55 @@
         </div>
     </header>
 
-    <!-- 하단 창 -->
-    <iframe name="content-window" class="content-frame" src="https://www.daum.net">
-        이 브라우저는 iframe을 지원하지 않습니다.
-    </iframe>
+    <!-- 하단 콘텐츠 영역 (iframe + 준비중 안내 오버레이) -->
+    <main class="content-container">
+        <iframe id="content-frame" name="content-window" class="content-frame" src="https://www.daum.net">
+            이 브라우저는 iframe을 지원하지 않습니다.
+        </iframe>
+        
+        <div id="prepMessage" class="prep-message">
+            <div class="prep-card">
+                <h3>🚧 페이지 준비 중입니다</h3>
+                <p>개별화교육 페이지는 추후 안내할 예정입니다.</p>
+            </div>
+        </div>
+    </main>
 
     <script>
         const navLinks = document.querySelectorAll('.nav-links a');
         const toggle = document.getElementById('newWindowToggle');
+        const iframe = document.getElementById('content-frame');
+        const prepMessage = document.getElementById('prepMessage');
 
-        // 1. localStorage에서 설정 불러오기 (기본값: false)
+        // 1. localStorage에서 설정 불러오기
         const savedNewWindow = localStorage.getItem('openInNewWindow') === 'true';
         toggle.checked = savedNewWindow;
 
-        // 2. 스위치 변경 시 localStorage에 저장
+        // 2. 스위치 변경 시 저장
         toggle.addEventListener('change', function() {
             localStorage.setItem('openInNewWindow', this.checked);
         });
 
-        // 3. 링크 클릭 이벤트 제어
+        // 3. 링크 클릭 제어
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
-                // 활성화(active) 탭 스타일 갱신
                 navLinks.forEach(item => item.classList.remove('active-link'));
                 this.classList.add('active-link');
 
-                // 새창 열기 모드가 켜져 있으면 iframe 로드 막고 새 탭으로 오픈
-                if (toggle.checked) {
+                // 2번 개별화교육인 경우
+                if (this.textContent.includes('개별화교육')) {
                     e.preventDefault();
-                    window.open(this.href, '_blank');
+                    iframe.style.display = 'none';
+                    prepMessage.style.display = 'flex';
+                } else {
+                    // 나머지 정상 링크인 경우
+                    iframe.style.display = 'block';
+                    prepMessage.style.display = 'none';
+
+                    if (toggle.checked) {
+                        e.preventDefault();
+                        window.open(this.href, '_blank');
+                    }
                 }
             });
         });
