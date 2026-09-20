@@ -175,7 +175,7 @@
             } else {
                 currentMenus = DEFAULT_MENUS;
             }
-            renderNavbar(); // 0초 렌더링
+            renderNavbar(true); // 0초 렌더링 + 첫 번째 메뉴 활성화 지정
 
             // 백그라운드 2.5초 제한 동기화
             fetchWithTimeout(GAS_URL, {}, 2500)
@@ -184,7 +184,7 @@
                     if (Array.isArray(data) && data.length > 0) {
                         currentMenus = data;
                         localStorage.setItem('hunmin_cached_menus', JSON.stringify(data));
-                        renderNavbar();
+                        renderNavbar(false); // 동기화 후에는 기존 선택 유지
                     }
                 })
                 .catch(err => console.log('백그라운드 동기화 스킵/타임아웃'));
@@ -200,7 +200,7 @@
                 if (!res.ok) throw new Error('저장 응답 오류');
                 currentMenus = newArray;
                 localStorage.setItem('hunmin_cached_menus', JSON.stringify(newArray));
-                renderNavbar();
+                renderNavbar(false);
                 alert('공용 메뉴가 성공적으로 동기화되었습니다!');
             } catch (err) {
                 alert('저장 중 오류가 발생했습니다.');
@@ -208,9 +208,12 @@
             }
         }
 
-        function renderNavbar() {
+        function renderNavbar(isInitial = false) {
             const activeEl = navLinksContainer.querySelector('.active-link');
-            const activeText = activeEl ? activeEl.textContent : '';
+            // 초기 진입 시 지정된 활성 항목이 없으면 첫 번째 메뉴 text를 기본값으로 설정
+            const targetActiveText = isInitial 
+                ? (currentMenus[0] ? currentMenus[0].text : '') 
+                : (activeEl ? activeEl.textContent : (currentMenus[0] ? currentMenus[0].text : ''));
 
             navLinksContainer.innerHTML = '';
             currentMenus.forEach((menu) => {
@@ -218,7 +221,9 @@
                 a.href = menu.url;
                 a.target = 'content-window';
                 a.textContent = menu.text;
-                if (menu.text === activeText) a.classList.add('active-link');
+                if (menu.text === targetActiveText) {
+                    a.classList.add('active-link');
+                }
                 navLinksContainer.appendChild(a);
             });
             bindNavEvents();
@@ -244,6 +249,7 @@
                     } else {
                         iframe.style.display = 'block';
                         prepMessage.style.display = 'none';
+                        // daum 등 보안 거부/지연 사이트라면 아래 src 연결 대신 about:blank 유지 또는 주소 연결 선택
                         iframe.src = this.href;
                     }
                 });
