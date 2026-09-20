@@ -151,7 +151,19 @@
             localStorage.setItem('openInNewWindow', toggle.checked);
         });
 
-        // [핵심] 즉시 렌더링 + 백그라운드 동기화 로직 적용
+        async function fetchWithTimeout(url, options = {}, timeout = 2500) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeout);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(timer);
+                return response;
+            } catch (err) {
+                clearTimeout(timer);
+                throw err;
+            }
+        }
+
         function loadMenusFast() {
             const cached = localStorage.getItem('hunmin_cached_menus');
             if (cached) {
@@ -163,10 +175,10 @@
             } else {
                 currentMenus = DEFAULT_MENUS;
             }
-            renderNavbar(); // 0초 만에 화면 그리기 완료
+            renderNavbar(); // 0초 렌더링
 
-            // 백그라운드에서 구글 서버 확인 후 갱신
-            fetch(GAS_URL)
+            // 백그라운드 2.5초 제한 동기화
+            fetchWithTimeout(GAS_URL, {}, 2500)
                 .then(res => res.ok ? res.json() : null)
                 .then(data => {
                     if (Array.isArray(data) && data.length > 0) {
@@ -175,16 +187,16 @@
                         renderNavbar();
                     }
                 })
-                .catch(err => console.log('백그라운드 동기화 스킵/오류:', err));
+                .catch(err => console.log('백그라운드 동기화 스킵/타임아웃'));
         }
 
         async function saveMenusToCloud(newArray) {
             try {
-                const res = await fetch(GAS_URL, {
+                const res = await fetchWithTimeout(GAS_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(newArray)
-                });
+                }, 4000);
                 if (!res.ok) throw new Error('저장 응답 오류');
                 currentMenus = newArray;
                 localStorage.setItem('hunmin_cached_menus', JSON.stringify(newArray));
@@ -197,9 +209,8 @@
         }
 
         function renderNavbar() {
-            // 현재 활성 링크 텍스트 기억
             const activeEl = navLinksContainer.querySelector('.active-link');
-            const activeText = activeEl ? activeEl.textContent : (currentMenus[0] ? currentMenus[0].text : '');
+            const activeText = activeEl ? activeEl.textContent : '';
 
             navLinksContainer.innerHTML = '';
             currentMenus.forEach((menu) => {
@@ -211,15 +222,6 @@
                 navLinksContainer.appendChild(a);
             });
             bindNavEvents();
-            
-            // 최초 로드 시 기본 iframe 설정
-            if (currentMenus.length > 0 && (iframe.src === 'about:blank' || !iframe.getAttribute('src'))) {
-                const firstLink = navLinksContainer.querySelector('a');
-                if (firstLink && !activeEl) {
-                    firstLink.classList.add('active-link');
-                    iframe.src = firstLink.href;
-                }
-            }
         }
 
         function bindNavEvents() {
@@ -228,6 +230,13 @@
                 link.addEventListener('click', function(e) {
                     navLinks.forEach(item => item.classList.remove('active-link'));
                     this.classList.add('active-link');
+                    
+                    if (toggle.checked) {
+                        e.preventDefault();
+                        window.open(this.href, '_blank');
+                        return;
+                    }
+
                     if (this.textContent.includes('개별화교육')) {
                         e.preventDefault();
                         iframe.style.display = 'none';
@@ -235,10 +244,7 @@
                     } else {
                         iframe.style.display = 'block';
                         prepMessage.style.display = 'none';
-                        if (toggle.checked) {
-                            e.preventDefault();
-                            window.open(this.href, '_blank');
-                        }
+                        iframe.src = this.href;
                     }
                 });
             });
