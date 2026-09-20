@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>훈민초 통합 링크</title>
+    <title>훈민초 통합 링크 (공용모드)</title>
     <style>
         body {
             margin: 0; padding: 0;
@@ -117,12 +117,13 @@
     </div>
 
     <script>
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbwrCnCmLYrx4m0eBXThRke9CUN4el9opH6uULXnZHFGNy0qWVs7v0bEfaTpmVTZvQec/exec';
+        // 새로 발급된 구글 웹 앱 URL 반영 완료
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbz7pd5yqw3tit8eA_ZPk2nf-Trz80MrcHNHXXyZ6dk9tLuEEfYagcgETocvjIFnd3FH/exec';
 
         const DEFAULT_MENUS = [
             { text: '1. 특별실 예약', url: 'https://www.daum.net' },
             { text: '2. 개별화교육', url: 'https://docs.google.com/spreadsheets/d/1G253TyOfPWsYgZmuULGvrJhJi4W1X3MGIXGfW_BPFRk/edit?pli=1&gid=0#gid=0' },
-            { text: '3. 돌봄&방과후', url: 'https://docs.google.com/spreadsheets/d/1cmGEgyH_C6u1deECFZOlCGaT7ilFVRtVsh6vgWbT6m4/edit?gid=1317717015#gid=1317717015' },
+            { text: '3. 늘봄&방과후', url: 'https://docs.google.com/spreadsheets/d/1cmGEgyH_C6u1deECFZOlCGaT7ilFVRtVsh6vgWbT6m4/edit?gid=1317717015#gid=1317717015' },
             { text: '4. 연수자료', url: 'https://padlet.com/paparo09/2026-b4i26qmywba85v35' }
         ];
 
@@ -151,7 +152,6 @@
             localStorage.setItem('openInNewWindow', toggle.checked);
         });
 
-        // [캐시 방지 ?v= timestamp 추가]
         async function loadMenusFromCloud() {
             try {
                 const res = await fetch(`${GAS_URL}?v=${Date.now()}`);
