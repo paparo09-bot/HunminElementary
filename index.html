@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>훈민초 통합 링크</title>
+    <title>훈민초 통합 링크 (공용모드)</title>
     <style>
         body {
             margin: 0; padding: 0;
@@ -117,7 +117,6 @@
     </div>
 
     <script>
-        // 새로 발급된 구글 웹 앱 URL 반영 완료
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbz7pd5yqw3tit8eA_ZPk2nf-Trz80MrcHNHXXyZ6dk9tLuEEfYagcgETocvjIFnd3FH/exec';
 
         const DEFAULT_MENUS = [
@@ -152,18 +151,31 @@
             localStorage.setItem('openInNewWindow', toggle.checked);
         });
 
-        async function loadMenusFromCloud() {
-            try {
-                const res = await fetch(`${GAS_URL}?v=${Date.now()}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    currentMenus = Array.isArray(data) && data.length > 0 ? data : DEFAULT_MENUS;
-                } else { currentMenus = DEFAULT_MENUS; }
-            } catch (err) {
-                console.error('불러오기 실패', err);
+        // [핵심] 즉시 렌더링 + 백그라운드 동기화 로직 적용
+        function loadMenusFast() {
+            const cached = localStorage.getItem('hunmin_cached_menus');
+            if (cached) {
+                try {
+                    currentMenus = JSON.parse(cached);
+                } catch(e) {
+                    currentMenus = DEFAULT_MENUS;
+                }
+            } else {
                 currentMenus = DEFAULT_MENUS;
             }
-            renderNavbar();
+            renderNavbar(); // 0초 만에 화면 그리기 완료
+
+            // 백그라운드에서 구글 서버 확인 후 갱신
+            fetch(GAS_URL)
+                .then(res => res.ok ? res.json() : null)
+                .then(data => {
+                    if (Array.isArray(data) && data.length > 0) {
+                        currentMenus = data;
+                        localStorage.setItem('hunmin_cached_menus', JSON.stringify(data));
+                        renderNavbar();
+                    }
+                })
+                .catch(err => console.log('백그라운드 동기화 스킵/오류:', err));
         }
 
         async function saveMenusToCloud(newArray) {
@@ -175,6 +187,7 @@
                 });
                 if (!res.ok) throw new Error('저장 응답 오류');
                 currentMenus = newArray;
+                localStorage.setItem('hunmin_cached_menus', JSON.stringify(newArray));
                 renderNavbar();
                 alert('공용 메뉴가 성공적으로 동기화되었습니다!');
             } catch (err) {
@@ -184,18 +197,28 @@
         }
 
         function renderNavbar() {
+            // 현재 활성 링크 텍스트 기억
+            const activeEl = navLinksContainer.querySelector('.active-link');
+            const activeText = activeEl ? activeEl.textContent : (currentMenus[0] ? currentMenus[0].text : '');
+
             navLinksContainer.innerHTML = '';
-            currentMenus.forEach((menu, index) => {
+            currentMenus.forEach((menu) => {
                 const a = document.createElement('a');
                 a.href = menu.url;
                 a.target = 'content-window';
                 a.textContent = menu.text;
-                if (index === 0) a.classList.add('active-link');
+                if (menu.text === activeText) a.classList.add('active-link');
                 navLinksContainer.appendChild(a);
             });
             bindNavEvents();
+            
+            // 최초 로드 시 기본 iframe 설정
             if (currentMenus.length > 0 && (iframe.src === 'about:blank' || !iframe.getAttribute('src'))) {
-                iframe.src = currentMenus[0].url;
+                const firstLink = navLinksContainer.querySelector('a');
+                if (firstLink && !activeEl) {
+                    firstLink.classList.add('active-link');
+                    iframe.src = firstLink.href;
+                }
             }
         }
 
@@ -289,7 +312,7 @@
             menuModal.style.display = 'none';
         });
 
-        loadMenusFromCloud();
+        loadMenusFast();
     </script>
 </body>
 </html>
