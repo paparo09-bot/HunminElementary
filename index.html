@@ -16,7 +16,7 @@
             background-color: #f9fafb;
         }
 
-        /* 상단 메뉴바 (3분할 밸런스 구조: 좌측여백 / 중앙메뉴 / 우측스위치) */
+        /* 상단 메뉴바 (3분할 밸런스 구조) */
         .navbar {
             background-color: #ffffff;
             display: flex;
@@ -73,6 +73,16 @@
             font-weight: 600;
         }
 
+        /* 우측 컨트롤 그룹 (스위치 + 톱니바퀴) */
+        .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-left: 16px;
+            border-left: 1px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+
         /* 우측 새창 열기 스위치 영역 스타일 */
         .toggle-container {
             display: flex;
@@ -81,9 +91,6 @@
             font-size: 13.5px;
             color: #4b5563;
             user-select: none;
-            padding-left: 16px;
-            border-left: 1px solid #e5e7eb;
-            flex-shrink: 0;
         }
 
         /* 스위치 디자인 */
@@ -105,11 +112,31 @@
         input:checked + .slider { background-color: #2563eb; }
         input:checked + .slider:before { transform: translateX(16px); }
 
+        /* 모던 UI에 어울리는 톱니바퀴 아이콘 버튼 스타일 */
+        .gear-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            color: #4b5563;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .gear-btn:hover {
+            background-color: #f3f4f6;
+            color: #111827;
+            transform: rotate(45deg);
+        }
+
         @media (max-width: 768px) {
             .nav-spacer { display: none; }
         }
 
-        /* 하단 콘텐츠 컨테이너 (relative 기준) */
+        /* 하단 콘텐츠 컨테이너 */
         .content-container {
             flex-grow: 1;
             position: relative;
@@ -131,7 +158,7 @@
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: #f9fafb;
-            display: none; /* 기본 숨김 */
+            display: none;
             justify-content: center;
             align-items: center;
             z-index: 10;
@@ -144,15 +171,86 @@
             text-align: center;
             border: 1px solid #e5e7eb;
         }
-        .prep-card h3 {
-            margin: 0 0 8px 0;
-            font-size: 18px;
-            color: #111827;
+        .prep-card h3 { margin: 0 0 8px 0; font-size: 18px; color: #111827; }
+        .prep-card p { margin: 0; color: #6b7280; font-size: 14.5px; }
+
+        /* 공통 모달 스타일 */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
-        .prep-card p {
-            margin: 0;
-            color: #6b7280;
-            font-size: 14.5px;
+        .modal-box {
+            background: #fff;
+            width: 90%;
+            max-width: 550px;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-box h3 { margin-top: 0; font-size: 18px; color: #111827; }
+        .menu-list {
+            overflow-y: auto;
+            flex-grow: 1;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .menu-item-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: #f9fafb;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        .menu-item-row input {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 13.5px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-secondary { background: #e5e7eb; color: #374151; }
+        .btn-danger { background: #dc2626; color: white; }
+        .add-form {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .pwd-input-field {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            margin: 12px 0 16px 0;
         }
     </style>
 </head>
@@ -164,23 +262,29 @@
             <span style="visibility: hidden;">스위치자리대체</span>
         </div>
 
-        <div class="nav-links">
-            <a href="https://www.daum.net" target="content-window" class="active-link">1. 특별실 예약</a>
-            <a href="https://docs.google.com/spreadsheets/d/1G253TyOfPWsYgZmuULGvrJhJi4W1X3MGIXGfW_BPFRk/edit?pli=1&gid=0#gid=0" target="content-window">2. 개별화교육</a>
-            <a href="https://docs.google.com/spreadsheets/d/1cmGEgyH_C6u1deECFZOlCGaT7ilFVRtVsh6vgWbT6m4/edit?gid=1317717015#gid=1317717015" target="content-window">3. 돌봄&방과후</a>
-            <a href="https://padlet.com/paparo09/2026-b4i26qmywba85v35" target="content-window">4. 연수자료</a>
+        <div class="nav-links" id="navLinksContainer">
+            <!-- JS로 동적 렌더링됨 -->
         </div>
         
-        <div class="toggle-container">
-            <label class="switch">
-                <input type="checkbox" id="newWindowToggle">
-                <span class="slider"></span>
-            </label>
-            <span>새창에서 열기</span>
+        <div class="right-controls">
+            <div class="toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="newWindowToggle">
+                    <span class="slider"></span>
+                </label>
+                <span>새창에서 열기</span>
+            </div>
+            <!-- 모던 벡터 SVG 톱니바퀴 아이콘 -->
+            <button id="gearBtn" class="gear-btn" title="메뉴 설정">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.10a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+            </button>
         </div>
     </header>
 
-    <!-- 하단 콘텐츠 영역 (iframe + 준비중 안내 오버레이) -->
+    <!-- 하단 콘텐츠 영역 -->
     <main class="content-container">
         <iframe id="content-frame" name="content-window" class="content-frame" src="https://www.daum.net">
             이 브라우저는 iframe을 지원하지 않습니다.
@@ -194,45 +298,207 @@
         </div>
     </main>
 
+    <!-- 비밀번호 인증 모달 (* 마스킹 적용) -->
+    <div id="pwdModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 360px;">
+            <h3>관리자 인증</h3>
+            <p style="font-size: 13.5px; color: #6b7280; margin: 0;">설정 비밀번호를 입력해주세요.</p>
+            <input type="password" id="pwdInput" class="pwd-input-field" placeholder="비밀번호 입력">
+            <div class="btn-group">
+                <button class="btn btn-primary" id="confirmPwdBtn">확인</button>
+                <button class="btn btn-secondary" id="closePwdBtn">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메뉴 관리 모달 -->
+    <div id="menuModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>메뉴 설정 (생성 / 편집 / 제거)</h3>
+            <div class="menu-list" id="modalMenuList">
+                <!-- JS 생성 영역 -->
+            </div>
+            
+            <div class="add-form">
+                <input type="text" id="newMenuText" placeholder="새 메뉴 이름 (예: 5. 새 메뉴)">
+                <input type="text" id="newMenuUrl" placeholder="URL 주소">
+                <button class="btn btn-primary" id="addMenuBtn">추가</button>
+            </div>
+
+            <div class="btn-group" style="margin-top: 16px;">
+                <button class="btn btn-primary" id="saveMenuBtn">저장 및 적용</button>
+                <button class="btn btn-secondary" id="closeModalBtn">닫기</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const navLinks = document.querySelectorAll('.nav-links a');
+        const DEFAULT_MENUS = [
+            { text: '1. 특별실 예약', url: 'https://www.daum.net' },
+            { text: '2. 개별화교육', url: 'https://docs.google.com/spreadsheets/d/1G253TyOfPWsYgZmuULGvrJhJi4W1X3MGIXGfW_BPFRk/edit?pli=1&gid=0#gid=0' },
+            { text: '3. 돌봄&방과후', url: 'https://docs.google.com/spreadsheets/d/1cmGEgyH_C6u1deECFZOlCGaT7ilFVRtVsh6vgWbT6m4/edit?gid=1317717015#gid=1317717015' },
+            { text: '4. 연수자료', url: 'https://padlet.com/paparo09/2026-b4i26qmywba85v35' }
+        ];
+
+        let currentMenus = JSON.parse(localStorage.getItem('customMenus')) || DEFAULT_MENUS;
         const toggle = document.getElementById('newWindowToggle');
         const iframe = document.getElementById('content-frame');
         const prepMessage = document.getElementById('prepMessage');
+        const navLinksContainer = document.getElementById('navLinksContainer');
 
-        // 1. localStorage에서 설정 불러오기
-        const savedNewWindow = localStorage.getItem('openInNewWindow') === 'true';
-        toggle.checked = savedNewWindow;
+        const gearBtn = document.getElementById('gearBtn');
+        const pwdModal = document.getElementById('pwdModal');
+        const pwdInput = document.getElementById('pwdInput');
+        const confirmPwdBtn = document.getElementById('confirmPwdBtn');
+        const closePwdBtn = document.getElementById('closePwdBtn');
 
-        // 2. 스위치 변경 시 저장
-        toggle.addEventListener('change', function() {
-            localStorage.setItem('openInNewWindow', this.checked);
+        const menuModal = document.getElementById('menuModal');
+        const modalMenuList = document.getElementById('modalMenuList');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const saveMenuBtn = document.getElementById('saveMenuBtn');
+        const addMenuBtn = document.getElementById('addMenuBtn');
+        const newMenuText = document.getElementById('newMenuText');
+        const newMenuUrl = document.getElementById('newMenuUrl');
+
+        // 1. localStorage 새창 설정 로드
+        toggle.checked = localStorage.getItem('openInNewWindow') === 'true';
+        toggle.addEventListener('change', () => {
+            localStorage.setItem('openInNewWindow', toggle.checked);
         });
 
-        // 3. 링크 클릭 제어
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                navLinks.forEach(item => item.classList.remove('active-link'));
-                this.classList.add('active-link');
-
-                // 2번 개별화교육인 경우
-                if (this.textContent.includes('개별화교육')) {
-                    e.preventDefault();
-                    iframe.style.display = 'none';
-                    prepMessage.style.display = 'flex';
-                } else {
-                    // 나머지 정상 링크인 경우
-                    iframe.style.display = 'block';
-                    prepMessage.style.display = 'none';
-
-                    if (toggle.checked) {
-                        e.preventDefault();
-                        window.open(this.href, '_blank');
-                    }
-                }
+        // 2. 메뉴 렌더링 함수
+        function renderNavbar() {
+            navLinksContainer.innerHTML = '';
+            currentMenus.forEach((menu, index) => {
+                const a = document.createElement('a');
+                a.href = menu.url;
+                a.target = 'content-window';
+                a.textContent = menu.text;
+                if (index === 0) a.classList.add('active-link');
+                navLinksContainer.appendChild(a);
             });
-        });
-    </script>
+            bindNavEvents();
+            if (currentMenus.length > 0) {
+                iframe.src = currentMenus[0].url;
+            }
+        }
 
+        function bindNavEvents() {
+            const navLinks = navLinksContainer.querySelectorAll('a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    navLinks.forEach(item => item.classList.remove('active-link'));
+                    this.classList.add('active-link');
+
+                    if (this.textContent.includes('개별화교육')) {
+                        e.preventDefault();
+                        iframe.style.display = 'none';
+                        prepMessage.style.display = 'flex';
+                    } else {
+                        iframe.style.display = 'block';
+                        prepMessage.style.display = 'none';
+                        if (toggle.checked) {
+                            e.preventDefault();
+                            window.open(this.href, '_blank');
+                        }
+                    }
+                });
+            });
+        }
+
+        // 3. 톱니바퀴 클릭 시 비밀번호 모달 오픈
+        gearBtn.addEventListener('click', () => {
+            pwdInput.value = '';
+            pwdModal.style.display = 'flex';
+            setTimeout(() => pwdInput.focus(), 50);
+        });
+
+        // 비밀번호 확인 로직
+        function verifyPassword() {
+            if (pwdInput.value === 'gnsalsch147#') {
+                pwdModal.style.display = 'none';
+                openModal();
+            } else {
+                alert('비밀번호가 틀렸습니다.');
+                pwdInput.value = '';
+                pwdInput.focus();
+            }
+        }
+
+        confirmPwdBtn.addEventListener('click', verifyPathPwd = verifyPassword);
+        pwdInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') verifyPassword();
+        });
+        closePwdBtn.addEventListener('click', () => {
+            pwdModal.style.display = 'none';
+        });
+
+        function openModal() {
+            renderModalList();
+            menuModal.style.display = 'flex';
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            menuModal.style.display = 'none';
+        });
+
+        function renderModalList() {
+            modalMenuList.innerHTML = '';
+            currentMenus.forEach((menu, idx) => {
+                const row = document.createElement('div');
+                row.className = 'menu-item-row';
+                row.innerHTML = `
+                    <input type="text" value="${menu.text}" data-idx="${idx}" class="edit-text" placeholder="메뉴명">
+                    <input type="text" value="${menu.url}" data-idx="${idx}" class="edit-url" placeholder="URL">
+                    <button class="btn btn-danger delete-btn" data-idx="${idx}">삭제</button>
+                `;
+                modalMenuList.appendChild(row);
+            });
+
+            // 삭제 이벤트 바인딩
+            modalMenuList.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = e.target.getAttribute('data-idx');
+                    currentMenus.splice(idx, 1);
+                    renderModalList();
+                });
+            });
+        }
+
+        // 메뉴 추가
+        addMenuBtn.addEventListener('click', () => {
+            const text = newMenuText.value.trim();
+            const url = newMenuUrl.value.trim();
+            if (!text || !url) {
+                alert('메뉴 이름과 URL을 모두 입력해주세요.');
+                return;
+            }
+            currentMenus.push({ text, url });
+            newMenuText.value = '';
+            newMenuUrl.value = '';
+            renderModalList();
+        });
+
+        // 저장 및 적용
+        saveMenuBtn.addEventListener('click', () => {
+            const textInputs = modalMenuList.querySelectorAll('.edit-text');
+            const urlInputs = modalMenuList.querySelectorAll('.edit-url');
+            
+            const updated = [];
+            for (let i = 0; i < textInputs.length; i++) {
+                updated.push({
+                    text: textInputs[i].value.trim(),
+                    url: urlInputs[i].value.trim()
+                });
+            }
+            currentMenus = updated;
+            localStorage.setItem('customMenus', JSON.stringify(currentMenus));
+            renderNavbar();
+            menuModal.style.display = 'none';
+        });
+
+        // 초기 실행
+        renderNavbar();
+    </script>
 </body>
 </html>
