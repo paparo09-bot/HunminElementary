@@ -69,7 +69,7 @@
         <div class="right-controls">
             <div class="toggle-container">
                 <label class="switch"><input type="checkbox" id="newWindowToggle"><span class="slider"></span></label>
-                <span>새창에서 열기</span>
+                <span>새 탭에서 열기</span>
             </div>
             <button id="gearBtn" class="gear-btn" title="메뉴 설정">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -188,7 +188,6 @@
                 .catch(err => console.log('백그라운드 동기화 스킵/타임아웃'));
         }
 
-        // URL이 비어있으면 준비중 화면, 있으면 iframe 표시
         function updateDisplayByMenu(menuObj) {
             const hasValidUrl = menuObj && menuObj.url && menuObj.url.trim() !== '';
             
