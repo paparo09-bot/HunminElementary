@@ -105,7 +105,7 @@
             <h3>메뉴 설정 (공용 동기화)</h3>
             <div class="menu-list" id="modalMenuList"></div>
             <div class="add-form">
-                <input type="text" id="newMenuText" placeholder="새 메뉴 이름 (예: 5. 새 메뉴)">
+                <input type="text" id="newMenuText" placeholder="새 메뉴 이름 (예: 4. 새 메뉴)">
                 <input type="text" id="newMenuUrl" placeholder="URL 주소">
                 <button class="btn btn-primary" id="addMenuBtn">추가</button>
             </div>
@@ -150,7 +150,7 @@
             localStorage.setItem('openInNewWindow', toggle.checked);
         });
 
-        async function fetchWithTimeout(url, options = {}, timeout = 2500) {
+        async function fetchWithTimeout(url, options = {}, timeout = 4000) {
             const controller = new AbortController();
             const timer = setTimeout(() => controller.abort(), timeout);
             try {
@@ -174,11 +174,10 @@
             } else {
                 currentMenus = DEFAULT_MENUS;
             }
-            renderNavbar(true); // 0초 렌더링 + 첫 번째 메뉴 활성화 지정
-            loadInitialContent(); // 첫 번째 화면 즉시 로드
+            renderNavbar(true);
+            loadInitialContent();
 
-            // 백그라운드 2.5초 제한 동기화
-            fetchWithTimeout(GAS_URL, {}, 2500)
+            fetchWithTimeout(GAS_URL, {}, 3000)
                 .then(res => res.ok ? res.json() : null)
                 .then(data => {
                     if (Array.isArray(data) && data.length > 0) {
@@ -206,19 +205,29 @@
 
         async function saveMenusToCloud(newArray) {
             try {
+                // 페이로드 정제 (공백 제거 및 안전한 JSON 변환)
+                const sanitized = newArray.map(item => ({
+                    text: (item.text || '').trim(),
+                    url: (item.url || '').trim()
+                }));
+
                 const res = await fetchWithTimeout(GAS_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(newArray)
-                }, 4000);
-                if (!res.ok) throw new Error('저장 응답 오류');
-                currentMenus = newArray;
-                localStorage.setItem('hunmin_cached_menus', JSON.stringify(newArray));
+                    body: JSON.stringify(sanitized),
+                    redirect: 'follow'
+                }, 6000);
+
+                if (!res.ok) throw new Error(`서버 응답 오류 (HTTP ${res.status})`);
+                
+                currentMenus = sanitized;
+                localStorage.setItem('hunmin_cached_menus', JSON.stringify(sanitized));
                 renderNavbar(false);
+                loadInitialContent();
                 alert('공용 메뉴가 성공적으로 동기화되었습니다!');
             } catch (err) {
-                alert('저장 중 오류가 발생했습니다.');
-                console.error(err);
+                console.error('저장 상세 오류:', err);
+                alert('저장 중 오류가 발생했습니다. (GAS 웹 앱 배포 권한 또는 URL 형식을 확인해주세요)\n오류 내용: ' + err.message);
             }
         }
 
@@ -298,8 +307,8 @@
                 const row = document.createElement('div');
                 row.className = 'menu-item-row';
                 row.innerHTML = `
-                    <input type="text" value="${menu.text}" data-idx="${idx}" class="edit-text" placeholder="메뉴명">
-                    <input type="text" value="${menu.url}" data-idx="${idx}" class="edit-url" placeholder="URL">
+                    <input type="text" value="${escapeHtml(menu.text)}" data-idx="${idx}" class="edit-text" placeholder="메뉴명">
+                    <input type="text" value="${escapeHtml(menu.url)}" data-idx="${idx}" class="edit-url" placeholder="URL">
                     <button class="btn btn-danger delete-btn" data-idx="${idx}">삭제</button>
                 `;
                 modalMenuList.appendChild(row);
@@ -311,6 +320,10 @@
                     renderModalList();
                 });
             });
+        }
+
+        function escapeHtml(str) {
+            return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
         addMenuBtn.addEventListener('click', () => {
