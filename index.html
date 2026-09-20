@@ -117,7 +117,6 @@
     </div>
 
     <script>
-        // 반영된 구글 앱스 스크립트 웹 앱 URL
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbwrCnCmLYrx4m0eBXThRke9CUN4el9opH6uULXnZHFGNy0qWVs7v0bEfaTpmVTZvQec/exec';
 
         const DEFAULT_MENUS = [
@@ -152,9 +151,10 @@
             localStorage.setItem('openInNewWindow', toggle.checked);
         });
 
+        // [캐시 방지 ?v= timestamp 추가]
         async function loadMenusFromCloud() {
             try {
-                const res = await fetch(GAS_URL);
+                const res = await fetch(`${GAS_URL}?v=${Date.now()}`);
                 if (res.ok) {
                     const data = await res.json();
                     currentMenus = Array.isArray(data) && data.length > 0 ? data : DEFAULT_MENUS;
