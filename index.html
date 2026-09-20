@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>훈민초 통합 링크</title>
+    <title>훈민초 통합 링크 (공용모드)</title>
     <style>
         body {
             margin: 0; padding: 0;
@@ -45,8 +45,7 @@
             display: none; justify-content: center; align-items: center; z-index: 10;
         }
         .prep-card { background: #ffffff; padding: 36px 48px; border-radius: 14px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); text-align: center; border: 1px solid #e5e7eb; }
-        .prep-card h3 { margin: 0 0 8px 0; font-size: 18px; color: #111827; }
-        .prep-card p { margin: 0; color: #6b7280; font-size: 14.5px; }
+        .prep-card h3 { margin: 0; font-size: 18px; color: #111827; }
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 1000; }
         .modal-box { background: #fff; width: 90%; max-width: 550px; border-radius: 12px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-height: 85vh; display: flex; flex-direction: column; }
         .modal-box h3 { margin-top: 0; font-size: 18px; color: #111827; }
@@ -84,7 +83,7 @@
     <main class="content-container">
         <iframe id="content-frame" name="content-window" class="content-frame" src="about:blank"></iframe>
         <div id="prepMessage" class="prep-message">
-            <div class="prep-card"><h3>🚧 페이지 준비 중입니다</h3><p>개별화교육 페이지는 추후 안내할 예정입니다.</p></div>
+            <div class="prep-card"><h3>🚧 페이지 준비 중입니다</h3></div>
         </div>
     </main>
 
@@ -106,7 +105,7 @@
             <div class="menu-list" id="modalMenuList"></div>
             <div class="add-form">
                 <input type="text" id="newMenuText" placeholder="새 메뉴 이름 (예: 4. 새 메뉴)">
-                <input type="text" id="newMenuUrl" placeholder="URL 주소">
+                <input type="text" id="newMenuUrl" placeholder="URL 주소 (비워두면 준비중 화면)">
                 <button class="btn btn-primary" id="addMenuBtn">추가</button>
             </div>
             <div class="btn-group" style="margin-top: 16px;">
@@ -189,17 +188,17 @@
                 .catch(err => console.log('백그라운드 동기화 스킵/타임아웃'));
         }
 
-        // 개별화교육 화면 표시 여부 판별 공통 함수
+        // URL이 비어있으면 준비중 화면, 있으면 iframe 표시
         function updateDisplayByMenu(menuObj) {
             const hasValidUrl = menuObj && menuObj.url && menuObj.url.trim() !== '';
             
-            if (menuObj && menuObj.text.includes('개별화교육') && !hasValidUrl) {
+            if (!hasValidUrl) {
                 iframe.style.display = 'none';
                 prepMessage.style.display = 'flex';
             } else {
                 iframe.style.display = 'block';
                 prepMessage.style.display = 'none';
-                iframe.src = menuObj ? menuObj.url : 'about:blank';
+                iframe.src = menuObj.url;
             }
         }
 
@@ -273,7 +272,7 @@
                         if (menuUrl && menuUrl.trim() !== '') {
                             window.open(menuUrl, '_blank');
                         } else {
-                            alert('설정된 URL이 없습니다.');
+                            alert('설정된 URL이 없어 준비 중인 페이지입니다.');
                         }
                         return;
                     }
@@ -315,7 +314,7 @@
                 row.className = 'menu-item-row';
                 row.innerHTML = `
                     <input type="text" value="${escapeHtml(menu.text)}" data-idx="${idx}" class="edit-text" placeholder="메뉴명">
-                    <input type="text" value="${escapeHtml(menu.url)}" data-idx="${idx}" class="edit-url" placeholder="URL (비워두면 준비중 화면 표시)">
+                    <input type="text" value="${escapeHtml(menu.url)}" data-idx="${idx}" class="edit-url" placeholder="URL (비워두면 준비중 화면)">
                     <button class="btn btn-danger delete-btn" data-idx="${idx}">삭제</button>
                 `;
                 modalMenuList.appendChild(row);
