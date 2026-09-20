@@ -120,10 +120,9 @@
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbz7pd5yqw3tit8eA_ZPk2nf-Trz80MrcHNHXXyZ6dk9tLuEEfYagcgETocvjIFnd3FH/exec';
 
         const DEFAULT_MENUS = [
-            { text: '1. 특별실 예약', url: 'https://www.daum.net' },
+            { text: '1. 늘봄&방과후', url: 'https://docs.google.com/spreadsheets/d/1cmGEgyH_C6u1deECFZOlCGaT7ilFVRtVsh6vgWbT6m4/edit?gid=1317717015#gid=1317717015' },
             { text: '2. 개별화교육', url: 'https://docs.google.com/spreadsheets/d/1G253TyOfPWsYgZmuULGvrJhJi4W1X3MGIXGfW_BPFRk/edit?pli=1&gid=0#gid=0' },
-            { text: '3. 늘봄&방과후', url: 'https://docs.google.com/spreadsheets/d/1cmGEgyH_C6u1deECFZOlCGaT7ilFVRtVsh6vgWbT6m4/edit?gid=1317717015#gid=1317717015' },
-            { text: '4. 연수자료', url: 'https://padlet.com/paparo09/2026-b4i26qmywba85v35' }
+            { text: '3. 연수자료', url: 'https://padlet.com/paparo09/2026-b4i26qmywba85v35' }
         ];
 
         let currentMenus = [];
@@ -176,6 +175,7 @@
                 currentMenus = DEFAULT_MENUS;
             }
             renderNavbar(true); // 0초 렌더링 + 첫 번째 메뉴 활성화 지정
+            loadInitialContent(); // 첫 번째 화면 즉시 로드
 
             // 백그라운드 2.5초 제한 동기화
             fetchWithTimeout(GAS_URL, {}, 2500)
@@ -184,10 +184,24 @@
                     if (Array.isArray(data) && data.length > 0) {
                         currentMenus = data;
                         localStorage.setItem('hunmin_cached_menus', JSON.stringify(data));
-                        renderNavbar(false); // 동기화 후에는 기존 선택 유지
+                        renderNavbar(false);
                     }
                 })
                 .catch(err => console.log('백그라운드 동기화 스킵/타임아웃'));
+        }
+
+        function loadInitialContent() {
+            if (currentMenus.length > 0 && !toggle.checked) {
+                const firstMenu = currentMenus[0];
+                if (firstMenu.text.includes('개별화교육')) {
+                    iframe.style.display = 'none';
+                    prepMessage.style.display = 'flex';
+                } else {
+                    iframe.style.display = 'block';
+                    prepMessage.style.display = 'none';
+                    iframe.src = firstMenu.url;
+                }
+            }
         }
 
         async function saveMenusToCloud(newArray) {
@@ -210,7 +224,6 @@
 
         function renderNavbar(isInitial = false) {
             const activeEl = navLinksContainer.querySelector('.active-link');
-            // 초기 진입 시 지정된 활성 항목이 없으면 첫 번째 메뉴 text를 기본값으로 설정
             const targetActiveText = isInitial 
                 ? (currentMenus[0] ? currentMenus[0].text : '') 
                 : (activeEl ? activeEl.textContent : (currentMenus[0] ? currentMenus[0].text : ''));
@@ -249,7 +262,6 @@
                     } else {
                         iframe.style.display = 'block';
                         prepMessage.style.display = 'none';
-                        // daum 등 보안 거부/지연 사이트라면 아래 src 연결 대신 about:blank 유지 또는 주소 연결 선택
                         iframe.src = this.href;
                     }
                 });
