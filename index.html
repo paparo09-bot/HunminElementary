@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>훈민초 통합 링크 (공용모드)</title>
+    <title>훈민초 통합 링크</title>
     <style>
         body {
             margin: 0; padding: 0;
@@ -189,23 +189,28 @@
                 .catch(err => console.log('백그라운드 동기화 스킵/타임아웃'));
         }
 
+        // 개별화교육 화면 표시 여부 판별 공통 함수
+        function updateDisplayByMenu(menuObj) {
+            const hasValidUrl = menuObj && menuObj.url && menuObj.url.trim() !== '';
+            
+            if (menuObj && menuObj.text.includes('개별화교육') && !hasValidUrl) {
+                iframe.style.display = 'none';
+                prepMessage.style.display = 'flex';
+            } else {
+                iframe.style.display = 'block';
+                prepMessage.style.display = 'none';
+                iframe.src = menuObj ? menuObj.url : 'about:blank';
+            }
+        }
+
         function loadInitialContent() {
             if (currentMenus.length > 0 && !toggle.checked) {
-                const firstMenu = currentMenus[0];
-                if (firstMenu.text.includes('개별화교육')) {
-                    iframe.style.display = 'none';
-                    prepMessage.style.display = 'flex';
-                } else {
-                    iframe.style.display = 'block';
-                    prepMessage.style.display = 'none';
-                    iframe.src = firstMenu.url;
-                }
+                updateDisplayByMenu(currentMenus[0]);
             }
         }
 
         async function saveMenusToCloud(newArray) {
             try {
-                // 페이로드 정제 (공백 제거 및 안전한 JSON 변환)
                 const sanitized = newArray.map(item => ({
                     text: (item.text || '').trim(),
                     url: (item.url || '').trim()
@@ -240,9 +245,10 @@
             navLinksContainer.innerHTML = '';
             currentMenus.forEach((menu) => {
                 const a = document.createElement('a');
-                a.href = menu.url;
+                a.href = menu.url || '#';
                 a.target = 'content-window';
                 a.textContent = menu.text;
+                a.dataset.url = menu.url || '';
                 if (menu.text === targetActiveText) {
                     a.classList.add('active-link');
                 }
@@ -258,21 +264,22 @@
                     navLinks.forEach(item => item.classList.remove('active-link'));
                     this.classList.add('active-link');
                     
+                    const menuText = this.textContent;
+                    const menuUrl = this.dataset.url;
+                    const matchedMenu = { text: menuText, url: menuUrl };
+
                     if (toggle.checked) {
                         e.preventDefault();
-                        window.open(this.href, '_blank');
+                        if (menuUrl && menuUrl.trim() !== '') {
+                            window.open(menuUrl, '_blank');
+                        } else {
+                            alert('설정된 URL이 없습니다.');
+                        }
                         return;
                     }
 
-                    if (this.textContent.includes('개별화교육')) {
-                        e.preventDefault();
-                        iframe.style.display = 'none';
-                        prepMessage.style.display = 'flex';
-                    } else {
-                        iframe.style.display = 'block';
-                        prepMessage.style.display = 'none';
-                        iframe.src = this.href;
-                    }
+                    e.preventDefault();
+                    updateDisplayByMenu(matchedMenu);
                 });
             });
         }
@@ -308,7 +315,7 @@
                 row.className = 'menu-item-row';
                 row.innerHTML = `
                     <input type="text" value="${escapeHtml(menu.text)}" data-idx="${idx}" class="edit-text" placeholder="메뉴명">
-                    <input type="text" value="${escapeHtml(menu.url)}" data-idx="${idx}" class="edit-url" placeholder="URL">
+                    <input type="text" value="${escapeHtml(menu.url)}" data-idx="${idx}" class="edit-url" placeholder="URL (비워두면 준비중 화면 표시)">
                     <button class="btn btn-danger delete-btn" data-idx="${idx}">삭제</button>
                 `;
                 modalMenuList.appendChild(row);
@@ -329,7 +336,7 @@
         addMenuBtn.addEventListener('click', () => {
             const text = newMenuText.value.trim();
             const url = newMenuUrl.value.trim();
-            if (!text || !url) { alert('메뉴 이름과 URL을 모두 입력해주세요.'); return; }
+            if (!text) { alert('메뉴 이름을 입력해주세요.'); return; }
             currentMenus.push({ text, url });
             newMenuText.value = ''; newMenuUrl.value = '';
             renderModalList();
