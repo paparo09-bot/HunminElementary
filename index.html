@@ -72,7 +72,7 @@
         <div class="right-controls">
             <div class="toggle-container">
                 <label class="switch"><input type="checkbox" id="newWindowToggle"><span class="slider"></span></label>
-                <span>전체 새 탭에서 열기</span>
+                <span>새 탭으로 열기</span>
             </div>
             <button id="gearBtn" class="gear-btn" title="메뉴 설정">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -126,7 +126,7 @@
             { text: '1. 특별실 예약', url: 'https://docs.google.com/spreadsheets/d/19Mka1E9OB_HW-Gb-_OGEN8CWE2_o9pWKC01RH39SUqA/edit?gid=1784243194#gid=1784243194', openNew: false },
             { text: '2. 개별학생교육', url: 'https://docs.google.com/spreadsheets/d/1WhR1BTbOwF3z4Xk6ZolPjexXWIPRMAhFtvmb8CaOQlE/edit?gid=779125143#gid=779125143', openNew: false },
             { text: '3. 돌봄&방과후', url: 'https://docs.google.com/spreadsheets/d/1QKmvjeODqRzO805KYB4xQdapmPpHoFV2i1McdGvgU-k/edit?gid=214054720#gid=214054720', openNew: false },
-            { text: '4. 연수자료', url: 'https://padlet.com/paparo09/2026-b4i26qmywba85v35', openNew: true }
+            { text: '4. 연수자료', url: 'https://padlet.com/paparo09/2026-b4i26qmywba85v35', openNew: false }
         ];
 
         let currentMenus = [];
@@ -218,7 +218,6 @@
 
         function loadInitialContent() {
             if (currentMenus.length > 0 && !toggle.checked) {
-                // 첫 메뉴가 새 탭 지정이 아니라면 로드
                 if (!currentMenus[0].openNew) {
                     updateDisplayByMenu(currentMenus[0]);
                 }
@@ -285,7 +284,6 @@
                     const isOpenNew = this.dataset.openNew === 'true';
                     const matchedMenu = { text: menuText, url: menuUrl };
 
-                    // 전체 새 탭 토글이 켜져 있거나, 개별 메뉴가 새 탭으로 설정된 경우
                     if (toggle.checked || isOpenNew) {
                         e.preventDefault();
                         if (menuUrl && menuUrl.trim() !== '') {
@@ -296,7 +294,6 @@
                         return;
                     }
 
-                    // iframe 내에서 열리는 경우에만 활성화 스타일 유지 및 화면 전환
                     navLinks.forEach(item => item.classList.remove('active-link'));
                     this.classList.add('active-link');
 
