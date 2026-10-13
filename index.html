@@ -11,13 +11,20 @@
             display: flex; flex-direction: column; height: 100vh; background-color: #f8fafc;
         }
 
-        /* === 세련된 상단 네비게이션 바 === */
+        /* === ✨ 완전 리디자인: 프리미엄 화이트 럭셔리 네비게이션 바 === */
         .navbar {
-            background: #ffffff;
+            /* 반투명 글래스모피즘 효과로 본문 배경과 자연스럽게 오버레이 */
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            
             display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 24px;
-            border-bottom: 1px solid #e2e8f0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            padding: 14px 28px;
+            
+            /* 미세한 경계선 및 다층 입체 그림자로 고급스러운 깊이감 부여 */
+            border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02), 0 1px 2px rgba(15, 23, 42, 0.02);
+            
             flex-shrink: 0; flex-wrap: wrap; gap: 12px;
             z-index: 100;
         }
@@ -25,52 +32,73 @@
         
         /* 중앙 메뉴 링크 목록 */
         .nav-links { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; flex-grow: 1; }
+        
+        /* 기본 메뉴 아이템: 모던하고 감각적인 캡슐 형태 마감 */
         .nav-links a {
-            display: flex; align-items: center; color: #475569; text-decoration: none;
-            padding: 9px 18px; border-radius: 10px; font-size: 14.5px; font-weight: 600;
-            background-color: #f1f5f9;
-            border: 1px solid transparent;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; align-items: center; color: #64748b; text-decoration: none;
+            padding: 10px 20px; border-radius: 50px; font-size: 14.5px; font-weight: 600;
+            background-color: #ffffff;
+            
+            /* 입체감을 주는 은은한 듀얼 보더 라인 효과 */
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+            
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             letter-spacing: -0.2px;
         }
+        
+        /* 마우스 호버 시: 자연스럽게 스며드는 딥블루 업라이팅 및 쿠션 효과 */
         .nav-links a:hover {
-            background-color: #e2e8f0;
-            color: #0f172a;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            background-color: #f8fafc;
+            color: #1e40af;
+            border-color: #cbd5e1;
+            transform: translateY(-1.5px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.06);
         }
-        /* 눈에 확 띄는 활성화 메뉴 */
+        
+        /* 🔥 눈에 확 띄는 활성화 메뉴: 압도적 시인성의 Royal Blue 그라데이션 및 네온 오라 효과 */
         .nav-links a.active-link {
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: #ffffff;
             font-weight: 700;
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-            transform: translateY(-1px);
+            border-color: transparent;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35), 0 2px 4px rgba(37, 99, 235, 0.2);
+            transform: translateY(-1.5px);
         }
 
-        /* 오른쪽 토글 & 설정 박스 */
+        /* 오른쪽 토글 & 설정 박스 구조 스무스화 */
         .right-controls {
             display: flex; align-items: center; gap: 14px;
-            padding: 4px 6px 4px 14px;
-            background-color: #f8fafc;
+            padding: 6px 8px 6px 16px;
+            background-color: #ffffff;
             border: 1px solid #e2e8f0;
-            border-radius: 12px;
+            border-radius: 50px; /* 양 끝을 둥글게 깎아 통일감 강조 */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
             flex-shrink: 0;
         }
         .toggle-container { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: #475569; user-select: none; }
-        .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .2s; border-radius: 22px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .2s; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        input:checked + .slider { background-color: #2563eb; }
-        input:checked + .slider:before { transform: translateX(18px); }
         
+        /* 세련된 슬림 매커니즘 스위치 */
+        .switch { position: relative; display: inline-block; width: 42px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 22px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .3s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+        input:checked + .slider { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+        input:checked + .slider:before { transform: translateX(20px); }
+        
+        /* 럭셔리 주얼리 느낌의 회전 기어 버튼 */
         .gear-btn {
-            background: #ffffff; border: 1px solid #cbd5e1; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            width: 32px; height: 32px; border-radius: 8px; color: #475569; transition: all 0.25s ease;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            background: #ffffff; border: 1px solid #e2e8f0; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            width: 34px; height: 34px; border-radius: 50%; color: #64748b; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
         }
-        .gear-btn:hover { background-color: #2563eb; color: #ffffff; border-color: #2563eb; transform: rotate(60deg); }
+        .gear-btn:hover { 
+            background-color: #f1f5f9; 
+            color: #0f172a; 
+            border-color: #cbd5e1; 
+            transform: rotate(90deg) scale(1.05); 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
         
         @media (max-width: 768px) { .nav-spacer { display: none; } }
 
@@ -119,359 +147,10 @@
             <button id="gearBtn" class="gear-btn" title="메뉴 설정">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.10a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-                    <circle cx="12" cy="12" r="3"/>
                 </svg>
             </button>
         </div>
     </header>
 
-    <main class="content-container">
-        <iframe id="content-frame" name="content-window" class="content-frame" src="about:blank"></iframe>
-        <div id="prepMessage" class="prep-message">
-            <div class="prep-card"><h3>🚧 페이지 준비 중입니다</h3></div>
-        </div>
-    </main>
-
-    <div id="pwdModal" class="modal-overlay">
-        <div class="modal-box" style="max-width: 360px;">
-            <h3>관리자 인증</h3>
-            <p style="font-size: 13.5px; color: #64748b; margin: 0;">설정 비밀번호를 입력해주세요.</p>
-            <input type="password" id="pwdInput" class="pwd-input-field" placeholder="비밀번호 입력">
-            <div class="btn-group">
-                <button class="btn btn-primary" id="confirmPwdBtn">확인</button>
-                <button class="btn btn-secondary" id="closePwdBtn">취소</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="menuModal" class="modal-overlay">
-        <div class="modal-box">
-            <h3>메뉴 설정 (공용 동기화)</h3>
-            <div class="menu-list" id="modalMenuList"></div>
-            <div class="add-form">
-                <input type="text" id="newMenuText" placeholder="새 메뉴 이름 (예: 5. 새 메뉴)">
-                <input type="text" id="newMenuUrl" placeholder="URL 주소">
-                <label style="display:flex; align-items:center; gap:4px; font-size:13px;"><input type="checkbox" id="newMenuOpenNew"> 새 탭</label>
-                <button class="btn btn-primary" id="addMenuBtn">추가</button>
-            </div>
-            <div class="btn-group" style="margin-top: 16px;">
-                <button class="btn btn-primary" id="saveMenuBtn">저장 및 공용반영</button>
-                <button class="btn btn-secondary" id="closeModalBtn">닫기</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbz7pd5yqw3tit8eA_ZPk2nf-Trz80MrcHNHXXyZ6dk9tLuEEfYagcgETocvjIFnd3FH/exec';
-        const ADMIN_PWD_HASH = '1f0be3bf83dbbfb9e7ae70ecbebc79d2b86bb31015f8a00bc973e2185387d853';
-
-        const DEFAULT_MENUS = [
-            { text: '1. 특별실 예약', url: 'https://docs.google.com/spreadsheets/d/19Mka1E9OB_HW-Gb-_OGEN8CWE2_o9pWKC01RH39SUqA/edit?gid=1784243194#gid=1784243194', openNew: false },
-            { text: '2. 개별학생교육', url: 'https://docs.google.com/spreadsheets/d/1WhR1BTbOwF3z4Xk6ZolPjexXWIPRMAhFtvmb8CaOQlE/edit?gid=779125143#gid=779125143', openNew: false },
-            { text: '3. 돌봄&방과후', url: 'https://docs.google.com/spreadsheets/d/1QKmvjeODqRzO805KYB4xQdapmPpHoFV2i1McdGvgU-k/edit?gid=214054720#gid=214054720', openNew: false },
-            { text: '4. 연수자료', url: 'https://padlet.com/paparo09/2026-b4i26qmywba85v35', openNew: false }
-        ];
-
-        let currentMenus = [];
-        const toggle = document.getElementById('newWindowToggle');
-        const iframe = document.getElementById('content-frame');
-        const prepMessage = document.getElementById('prepMessage');
-        const navLinksContainer = document.getElementById('navLinksContainer');
-
-        const gearBtn = document.getElementById('gearBtn');
-        const pwdModal = document.getElementById('pwdModal');
-        const pwdInput = document.getElementById('pwdInput');
-        const confirmPwdBtn = document.getElementById('confirmPwdBtn');
-        const closePwdBtn = document.getElementById('closePwdBtn');
-
-        const menuModal = document.getElementById('menuModal');
-        const modalMenuList = document.getElementById('modalMenuList');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const saveMenuBtn = document.getElementById('saveMenuBtn');
-        const addMenuBtn = document.getElementById('addMenuBtn');
-        const newMenuText = document.getElementById('newMenuText');
-        const newMenuUrl = document.getElementById('newMenuUrl');
-        const newMenuOpenNew = document.getElementById('newMenuOpenNew');
-
-        toggle.checked = localStorage.getItem('openInNewWindow') === 'true';
-        toggle.addEventListener('change', () => {
-            localStorage.setItem('openInNewWindow', toggle.checked);
-        });
-
-        async function fetchWithTimeout(url, options = {}, timeout = 4000) {
-            const controller = new AbortController();
-            const timer = setTimeout(() => controller.abort(), timeout);
-            try {
-                const response = await fetch(url, { ...options, signal: controller.signal });
-                clearTimeout(timer);
-                return response;
-            } catch (err) {
-                clearTimeout(timer);
-                throw err;
-            }
-        }
-
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        async function initMenus() {
-            const cached = localStorage.getItem('hunmin_cached_menus');
-            if (cached) {
-                try {
-                    currentMenus = JSON.parse(cached);
-                } catch(e) {
-                    currentMenus = DEFAULT_MENUS;
-                }
-            } else {
-                currentMenus = DEFAULT_MENUS;
-            }
-            
-            renderNavbar(true);
-            loadInitialContent();
-
-            try {
-                const res = await fetchWithTimeout(GAS_URL, {}, 3000);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (Array.isArray(data) && data.length > 0) {
-                        const cachedStr = JSON.stringify(currentMenus);
-                        const serverStr = JSON.stringify(data);
-                        if (cachedStr !== serverStr) {
-                            currentMenus = data;
-                            localStorage.setItem('hunmin_cached_menus', serverStr);
-                            renderNavbar(false);
-                            loadInitialContent();
-                        }
-                    }
-                }
-            } catch (err) {
-                console.log('서버 동기화 건너뜀(캐시 사용):', err.message);
-            }
-        }
-
-        function updateDisplayByMenu(menuObj) {
-            const hasValidUrl = menuObj && menuObj.url && menuObj.url.trim() !== '';
-            
-            if (!hasValidUrl) {
-                iframe.style.display = 'none';
-                prepMessage.style.display = 'flex';
-            } else {
-                iframe.style.display = 'block';
-                prepMessage.style.display = 'none';
-                iframe.src = menuObj.url;
-            }
-        }
-
-        function loadInitialContent() {
-            if (currentMenus.length > 0 && !toggle.checked) {
-                if (!currentMenus[0].openNew) {
-                    updateDisplayByMenu(currentMenus[0]);
-                }
-            }
-        }
-
-        async function saveMenusToCloud(newArray) {
-            try {
-                const sanitized = newArray.map(item => ({
-                    text: (item.text || '').trim(),
-                    url: (item.url || '').trim(),
-                    openNew: !!item.openNew
-                }));
-
-                const res = await fetchWithTimeout(GAS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(sanitized),
-                    redirect: 'follow'
-                }, 6000);
-
-                if (!res.ok) throw new Error(`서버 응답 오류 (HTTP ${res.status})`);
-                
-                currentMenus = sanitized;
-                localStorage.setItem('hunmin_cached_menus', JSON.stringify(sanitized));
-                renderNavbar(false);
-                loadInitialContent();
-                alert('공용 메뉴가 성공적으로 동기화되었습니다!');
-            } catch (err) {
-                console.error('저장 상세 오류:', err);
-                alert('저장 중 오류가 발생했습니다.\n오류 내용: ' + err.message);
-            }
-        }
-
-        function renderNavbar(isInitial = false) {
-            const activeEl = navLinksContainer.querySelector('.active-link');
-            const targetActiveText = isInitial 
-                ? (currentMenus[0] ? currentMenus[0].text : '') 
-                : (activeEl ? activeEl.textContent : (currentMenus[0] ? currentMenus[0].text : ''));
-
-            navLinksContainer.innerHTML = '';
-            currentMenus.forEach((menu) => {
-                const a = document.createElement('a');
-                a.href = menu.url || '#';
-                a.target = menu.openNew ? '_blank' : 'content-window';
-                a.textContent = menu.text;
-                a.dataset.url = menu.url || '';
-                a.dataset.openNew = menu.openNew ? 'true' : 'false';
-
-                if (menu.text === targetActiveText) {
-                    a.classList.add('active-link');
-                }
-                navLinksContainer.appendChild(a);
-            });
-            bindNavEvents();
-        }
-
-        function bindNavEvents() {
-            const navLinks = navLinksContainer.querySelectorAll('a');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    const menuText = this.textContent;
-                    const menuUrl = this.dataset.url;
-                    const isOpenNew = this.dataset.openNew === 'true';
-                    const matchedMenu = { text: menuText, url: menuUrl };
-
-                    if (toggle.checked || isOpenNew) {
-                        e.preventDefault();
-                        if (menuUrl && menuUrl.trim() !== '') {
-                            window.open(menuUrl, '_blank');
-                        } else {
-                            alert('설정된 URL이 없어 준비 중인 페이지입니다.');
-                        }
-                        return;
-                    }
-
-                    navLinks.forEach(item => item.classList.remove('active-link'));
-                    this.classList.add('active-link');
-
-                    e.preventDefault();
-                    updateDisplayByMenu(matchedMenu);
-                });
-            });
-        }
-
-        gearBtn.addEventListener('click', () => {
-            pwdInput.value = '';
-            pwdModal.style.display = 'flex';
-            setTimeout(() => pwdInput.focus(), 50);
-        });
-
-        async function verifyPassword() {
-            const inputHash = await sha256(pwdInput.value);
-            if (inputHash === ADMIN_PWD_HASH) {
-                pwdModal.style.display = 'none';
-                openModal();
-            } else {
-                alert('비밀번호가 틀렸습니다.');
-                pwdInput.value = '';
-                pwdInput.focus();
-            }
-        }
-
-        confirmPwdBtn.addEventListener('click', verifyPassword);
-        pwdInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') verifyPassword(); });
-        closePwdBtn.addEventListener('click', () => { pwdModal.style.display = 'none'; });
-
-        function openModal() { renderModalList(); menuModal.style.display = 'flex'; }
-        closeModalBtn.addEventListener('click', () => { menuModal.style.display = 'none'; });
-
-        function renderModalList() {
-            modalMenuList.innerHTML = '';
-            currentMenus.forEach((menu, idx) => {
-                const row = document.createElement('div');
-                row.className = 'menu-item-row';
-                row.innerHTML = `
-                    <button class="btn-icon move-up" data-idx="${idx}" title="위로 이동">▲</button>
-                    <button class="btn-icon move-down" data-idx="${idx}" title="아래로 이동">▼</button>
-                    <input type="text" value="${escapeHtml(menu.text)}" class="edit-text" placeholder="메뉴명">
-                    <input type="text" value="${escapeHtml(menu.url)}" class="edit-url" placeholder="URL">
-                    <label><input type="checkbox" class="edit-opennew" ${menu.openNew ? 'checked' : ''}> 새 탭</label>
-                    <button class="btn btn-danger delete-btn" data-idx="${idx}">삭제</button>
-                `;
-                modalMenuList.appendChild(row);
-            });
-            bindModalEvents();
-        }
-
-        function bindModalEvents() {
-            modalMenuList.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    syncModalToCurrentMenus();
-                    const idx = parseInt(e.currentTarget.getAttribute('data-idx'));
-                    currentMenus.splice(idx, 1);
-                    renderModalList();
-                });
-            });
-
-            modalMenuList.querySelectorAll('.move-up').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const idx = parseInt(e.currentTarget.getAttribute('data-idx'));
-                    if (idx > 0) {
-                        syncModalToCurrentMenus();
-                        const temp = currentMenus[idx];
-                        currentMenus[idx] = currentMenus[idx - 1];
-                        currentMenus[idx - 1] = temp;
-                        renderModalList();
-                    }
-                });
-            });
-
-            modalMenuList.querySelectorAll('.move-down').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const idx = parseInt(e.currentTarget.getAttribute('data-idx'));
-                    if (idx < currentMenus.length - 1) {
-                        syncModalToCurrentMenus();
-                        const temp = currentMenus[idx];
-                        currentMenus[idx] = currentMenus[idx + 1];
-                        currentMenus[idx + 1] = temp;
-                        renderModalList();
-                    }
-                });
-            });
-        }
-
-        function syncModalToCurrentMenus() {
-            const textInputs = modalMenuList.querySelectorAll('.edit-text');
-            const urlInputs = modalMenuList.querySelectorAll('.edit-url');
-            const openNewCheckboxes = modalMenuList.querySelectorAll('.edit-opennew');
-            
-            const updated = [];
-            for (let i = 0; i < textInputs.length; i++) {
-                updated.push({
-                    text: textInputs[i].value.trim(),
-                    url: urlInputs[i].value.trim(),
-                    openNew: openNewCheckboxes[i].checked
-                });
-            }
-            currentMenus = updated;
-        }
-
-        function escapeHtml(str) {
-            return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-
-        addMenuBtn.addEventListener('click', () => {
-            const text = newMenuText.value.trim();
-            const url = newMenuUrl.value.trim();
-            const openNew = newMenuOpenNew.checked;
-            if (!text) { alert('메뉴 이름을 입력해주세요.'); return; }
-            
-            syncModalToCurrentMenus();
-            currentMenus.push({ text, url, openNew });
-            newMenuText.value = ''; newMenuUrl.value = ''; newMenuOpenNew.checked = false;
-            renderModalList();
-        });
-
-        saveMenuBtn.addEventListener('click', async () => {
-            syncModalToCurrentMenus();
-            await saveMenusToCloud(currentMenus);
-            menuModal.style.display = 'none';
-        });
-
-        initMenus();
-    </script>
 </body>
 </html>
