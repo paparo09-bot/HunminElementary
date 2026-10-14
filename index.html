@@ -12,18 +12,41 @@
         }
         .navbar {
             background-color: #ffffff; display: flex; align-items: center; justify-content: space-between;
-            padding: 10px 20px; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+            padding: 12px 20px; border-bottom: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
             flex-shrink: 0; flex-wrap: wrap; gap: 10px;
         }
         .nav-spacer { display: flex; align-items: center; visibility: hidden; user-select: none; padding-right: 16px; }
-        .nav-links { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; flex-grow: 1; }
+        .nav-links { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; flex-grow: 1; }
+        
+        /* ⭐️ 상단 메뉴 버튼 변경 및 강화된 스타일 */
         .nav-links a {
-            display: flex; align-items: center; color: #4b5563; text-decoration: none;
-            padding: 8px 16px; border-radius: 8px; font-size: 14.5px; font-weight: 500;
+            display: flex; align-items: center; color: #374151; text-decoration: none;
+            padding: 8px 18px; border-radius: 8px; font-size: 14.5px; font-weight: 600;
+            background-color: #f3f4f6; border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .nav-links a:hover { background-color: #f3f4f6; color: #111827; }
-        .nav-links a.active-link { background-color: #eff6ff; color: #2563eb; font-weight: 600; }
+        /* 마우스 오버 시 스타일: 살짝 들어 올려지며 그림자와 색상 변경 */
+        .nav-links a:hover { 
+            background-color: #e5e7eb; 
+            color: #111827;
+            border-color: #d1d5db;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        /* 선택된(Active) 상태 버튼: 브랜드 컬러(블루) 배경으로 강한 하이라이트 */
+        .nav-links a.active-link { 
+            background-color: #2563eb; 
+            color: #ffffff; 
+            border-color: #1d4ed8;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+        }
+        .nav-links a.active-link:hover {
+            background-color: #1d4ed8;
+            color: #ffffff;
+        }
+
         .right-controls { display: flex; align-items: center; gap: 12px; padding-left: 16px; border-left: 1px solid #e5e7eb; flex-shrink: 0; }
         .toggle-container { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: #4b5563; user-select: none; }
         .switch { position: relative; display: inline-block; width: 38px; height: 22px; }
@@ -109,277 +132,8 @@
             <div class="add-form">
                 <input type="text" id="newMenuText" placeholder="새 메뉴 이름 (예: 5. 새 메뉴)">
                 <input type="text" id="newMenuUrl" placeholder="URL 주소">
-                <label style="display:flex; align-items:center; gap:4px; font-size:13px;"><input type="checkbox" id="newMenuOpenNew"> 새 탭</label>
-                <button class="btn btn-primary" id="addMenuBtn">추가</button>
-            </div>
-            <div class="btn-group" style="margin-top: 16px;">
-                <button class="btn btn-primary" id="saveMenuBtn">저장 및 공용반영</button>
-                <button class="btn btn-secondary" id="closeModalBtn">닫기</button>
             </div>
         </div>
     </div>
-
-    <script>
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbz7pd5yqw3tit8eA_ZPk2nf-Trz80MrcHNHXXyZ6dk9tLuEEfYagcgETocvjIFnd3FH/exec';
-
-        const DEFAULT_MENUS = [
-            { text: '1. 특별실 예약', url: 'https://docs.google.com/spreadsheets/d/19Mka1E9OB_HW-Gb-_OGEN8CWE2_o9pWKC01RH39SUqA/edit?gid=1784243194#gid=1784243194', openNew: false },
-            { text: '2. 개별학생교육', url: 'https://docs.google.com/spreadsheets/d/1WhR1BTbOwF3z4Xk6ZolPjexXWIPRMAhFtvmb8CaOQlE/edit?gid=779125143#gid=779125143', openNew: false },
-            { text: '3. 돌봄&방과후', url: 'https://docs.google.com/spreadsheets/d/1QKmvjeODqRzO805KYB4xQdapmPpHoFV2i1McdGvgU-k/edit?gid=214054720#gid=214054720', openNew: false },
-            { text: '4. 연수자료', url: 'https://padlet.com/paparo09/2026-b4i26qmywba85v35', openNew: false }
-        ];
-
-        let currentMenus = [];
-        const toggle = document.getElementById('newWindowToggle');
-        const iframe = document.getElementById('content-frame');
-        const prepMessage = document.getElementById('prepMessage');
-        const navLinksContainer = document.getElementById('navLinksContainer');
-
-        const gearBtn = document.getElementById('gearBtn');
-        const pwdModal = document.getElementById('pwdModal');
-        const pwdInput = document.getElementById('pwdInput');
-        const confirmPwdBtn = document.getElementById('confirmPwdBtn');
-        const closePwdBtn = document.getElementById('closePwdBtn');
-
-        const menuModal = document.getElementById('menuModal');
-        const modalMenuList = document.getElementById('modalMenuList');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const saveMenuBtn = document.getElementById('saveMenuBtn');
-        const addMenuBtn = document.getElementById('addMenuBtn');
-        const newMenuText = document.getElementById('newMenuText');
-        const newMenuUrl = document.getElementById('newMenuUrl');
-        const newMenuOpenNew = document.getElementById('newMenuOpenNew');
-
-        toggle.checked = localStorage.getItem('openInNewWindow') === 'true';
-        toggle.addEventListener('change', () => {
-            localStorage.setItem('openInNewWindow', toggle.checked);
-        });
-
-        async function fetchWithTimeout(url, options = {}, timeout = 4000) {
-            const controller = new AbortController();
-            const timer = setTimeout(() => controller.abort(), timeout);
-            try {
-                const response = await fetch(url, { ...options, signal: controller.signal });
-                clearTimeout(timer);
-                return response;
-            } catch (err) {
-                clearTimeout(timer);
-                throw err;
-            }
-        }
-
-        async function initMenus() {
-            const cached = localStorage.getItem('hunmin_cached_menus');
-            if (cached) {
-                try {
-                    currentMenus = JSON.parse(cached);
-                } catch(e) {
-                    currentMenus = DEFAULT_MENUS;
-                }
-            } else {
-                currentMenus = DEFAULT_MENUS;
-            }
-            
-            renderNavbar(true);
-            loadInitialContent();
-
-            try {
-                const res = await fetchWithTimeout(GAS_URL, {}, 3000);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (Array.isArray(data) && data.length > 0) {
-                        const cachedStr = JSON.stringify(currentMenus);
-                        const serverStr = JSON.stringify(data);
-                        if (cachedStr !== serverStr) {
-                            currentMenus = data;
-                            localStorage.setItem('hunmin_cached_menus', serverStr);
-                            renderNavbar(false);
-                            loadInitialContent();
-                        }
-                    }
-                }
-            } catch (err) {
-                console.log('서버 동기화 건너뜀(캐시 사용):', err.message);
-            }
-        }
-
-        function updateDisplayByMenu(menuObj) {
-            const hasValidUrl = menuObj && menuObj.url && menuObj.url.trim() !== '';
-            
-            if (!hasValidUrl) {
-                iframe.style.display = 'none';
-                prepMessage.style.display = 'flex';
-            } else {
-                iframe.style.display = 'block';
-                prepMessage.style.display = 'none';
-                iframe.src = menuObj.url;
-            }
-        }
-
-        function loadInitialContent() {
-            if (currentMenus.length > 0 && !toggle.checked) {
-                if (!currentMenus[0].openNew) {
-                    updateDisplayByMenu(currentMenus[0]);
-                }
-            }
-        }
-
-        async function saveMenusToCloud(newArray) {
-            try {
-                const sanitized = newArray.map(item => ({
-                    text: (item.text || '').trim(),
-                    url: (item.url || '').trim(),
-                    openNew: !!item.openNew
-                }));
-
-                const res = await fetchWithTimeout(GAS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(sanitized),
-                    redirect: 'follow'
-                }, 6000);
-
-                if (!res.ok) throw new Error(`서버 응답 오류 (HTTP ${res.status})`);
-                
-                currentMenus = sanitized;
-                localStorage.setItem('hunmin_cached_menus', JSON.stringify(sanitized));
-                renderNavbar(false);
-                loadInitialContent();
-                alert('공용 메뉴가 성공적으로 동기화되었습니다!');
-            } catch (err) {
-                console.error('저장 상세 오류:', err);
-                alert('저장 중 오류가 발생했습니다.\n오류 내용: ' + err.message);
-            }
-        }
-
-        function renderNavbar(isInitial = false) {
-            const activeEl = navLinksContainer.querySelector('.active-link');
-            const targetActiveText = isInitial 
-                ? (currentMenus[0] ? currentMenus[0].text : '') 
-                : (activeEl ? activeEl.textContent : (currentMenus[0] ? currentMenus[0].text : ''));
-
-            navLinksContainer.innerHTML = '';
-            currentMenus.forEach((menu) => {
-                const a = document.createElement('a');
-                a.href = menu.url || '#';
-                a.target = menu.openNew ? '_blank' : 'content-window';
-                a.textContent = menu.text;
-                a.dataset.url = menu.url || '';
-                a.dataset.openNew = menu.openNew ? 'true' : 'false';
-
-                if (menu.text === targetActiveText) {
-                    a.classList.add('active-link');
-                }
-                navLinksContainer.appendChild(a);
-            });
-            bindNavEvents();
-        }
-
-        function bindNavEvents() {
-            const navLinks = navLinksContainer.querySelectorAll('a');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    const menuText = this.textContent;
-                    const menuUrl = this.dataset.url;
-                    const isOpenNew = this.dataset.openNew === 'true';
-                    const matchedMenu = { text: menuText, url: menuUrl };
-
-                    if (toggle.checked || isOpenNew) {
-                        e.preventDefault();
-                        if (menuUrl && menuUrl.trim() !== '') {
-                            window.open(menuUrl, '_blank');
-                        } else {
-                            alert('설정된 URL이 없어 준비 중인 페이지입니다.');
-                        }
-                        return;
-                    }
-
-                    navLinks.forEach(item => item.classList.remove('active-link'));
-                    this.classList.add('active-link');
-
-                    e.preventDefault();
-                    updateDisplayByMenu(matchedMenu);
-                });
-            });
-        }
-
-        gearBtn.addEventListener('click', () => {
-            pwdInput.value = '';
-            pwdModal.style.display = 'flex';
-            setTimeout(() => pwdInput.focus(), 50);
-        });
-
-        function verifyPassword() {
-            if (pwdInput.value === 'gnsalsch147#') {
-                pwdModal.style.display = 'none';
-                openModal();
-            } else {
-                alert('비밀번호가 틀렸습니다.');
-                pwdInput.value = '';
-                pwdInput.focus();
-            }
-        }
-
-        confirmPwdBtn.addEventListener('click', verifyPassword);
-        pwdInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') verifyPassword(); });
-        closePwdBtn.addEventListener('click', () => { pwdModal.style.display = 'none'; });
-
-        function openModal() { renderModalList(); menuModal.style.display = 'flex'; }
-        closeModalBtn.addEventListener('click', () => { menuModal.style.display = 'none'; });
-
-        function renderModalList() {
-            modalMenuList.innerHTML = '';
-            currentMenus.forEach((menu, idx) => {
-                const row = document.createElement('div');
-                row.className = 'menu-item-row';
-                row.innerHTML = `
-                    <input type="text" value="${escapeHtml(menu.text)}" data-idx="${idx}" class="edit-text" placeholder="메뉴명">
-                    <input type="text" value="${escapeHtml(menu.url)}" data-idx="${idx}" class="edit-url" placeholder="URL">
-                    <label><input type="checkbox" data-idx="${idx}" class="edit-opennew" ${menu.openNew ? 'checked' : ''}> 새 탭</label>
-                    <button class="btn btn-danger delete-btn" data-idx="${idx}">삭제</button>
-                `;
-                modalMenuList.appendChild(row);
-            });
-            modalMenuList.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const idx = e.currentTarget.getAttribute('data-idx');
-                    currentMenus.splice(idx, 1);
-                    renderModalList();
-                });
-            });
-        }
-
-        function escapeHtml(str) {
-            return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-
-        addMenuBtn.addEventListener('click', () => {
-            const text = newMenuText.value.trim();
-            const url = newMenuUrl.value.trim();
-            const openNew = newMenuOpenNew.checked;
-            if (!text) { alert('메뉴 이름을 입력해주세요.'); return; }
-            currentMenus.push({ text, url, openNew });
-            newMenuText.value = ''; newMenuUrl.value = ''; newMenuOpenNew.checked = false;
-            renderModalList();
-        });
-
-        saveMenuBtn.addEventListener('click', async () => {
-            const textInputs = modalMenuList.querySelectorAll('.edit-text');
-            const urlInputs = modalMenuList.querySelectorAll('.edit-url');
-            const openNewCheckboxes = modalMenuList.querySelectorAll('.edit-opennew');
-            const updated = [];
-            for (let i = 0; i < textInputs.length; i++) {
-                updated.push({
-                    text: textInputs[i].value.trim(),
-                    url: urlInputs[i].value.trim(),
-                    openNew: openNewCheckboxes[i].checked
-                });
-            }
-            await saveMenusToCloud(updated);
-            menuModal.style.display = 'none';
-        });
-
-        initMenus();
-    </script>
 </body>
 </html>
