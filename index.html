@@ -42,6 +42,7 @@
             flex-wrap: wrap;
             flex-grow: 1;
         }
+        /* 어두운 배경에 맞춰 기본 글자색을 밝은 회색으로 설정 */
         .nav-links a {
             display: flex;
             align-items: center;
@@ -53,15 +54,18 @@
             font-weight: 500;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        /* 마우스 올렸을 때(Hover) 스타일 */
         .nav-links a:hover {
             background-color: #334155;
             color: #ffffff;
         }
+        /* 현재 선택된 활성화 메뉴 스타일 */
         .nav-links a.active-link {
             background-color: #2563eb;
             color: #ffffff;
             font-weight: 600;
         }
+        /* 우측 컨트롤 영역 구분선 */
         .right-controls {
             display: flex;
             align-items: center;
@@ -70,6 +74,7 @@
             border-left: 1px solid #334155;
             flex-shrink: 0;
         }
+        /* 우측 글자색을 흰색으로 설정 */
         .toggle-container {
             display: flex;
             align-items: center;
@@ -117,6 +122,7 @@
         input:checked + .slider:before {
             transform: translateX(16px);
         }
+        /* 설정 아이콘 버튼 색상 */
         .gear-btn {
             background: none;
             border: none;
@@ -317,9 +323,3 @@
     </header>
 
     <main class="content-container">
-        <iframe id="content-frame" name="content-window" class="content-frame" src="about:blank"></iframe>
-        <div id="prepMessage" class="prep-message">
-            <div class="prep-card"><h3>🚧 페이지 준비 중입니다</h3></div>
-        </div>
-    </main>
-
