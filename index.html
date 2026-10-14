@@ -196,25 +196,37 @@
             renderNavbar(true);
             loadInitialContent();
 
+            syncFromServer(true);
+        }
+
+        // 서버(GAS)에서 최신 메뉴를 가져와 캐시와 다르면 갱신
+        // - 구글 앱스 스크립트는 첫 응답이 느릴 수 있어 타임아웃을 넉넉히(12초) 잡고, 실패하면 1번 재시도
+        // - 브라우저(특히 Edge)가 이전 응답을 재사용하지 않도록 no-store + 시간값 추가
+        async function syncFromServer(isInitial = false, retry = 1) {
             try {
-                const res = await fetchWithTimeout(GAS_URL, {}, 3000);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (Array.isArray(data) && data.length > 0) {
-                        const cachedStr = JSON.stringify(currentMenus);
-                        const serverStr = JSON.stringify(data);
-                        if (cachedStr !== serverStr) {
-                            currentMenus = data;
-                            localStorage.setItem('hunmin_cached_menus', serverStr);
-                            renderNavbar(false);
-                            loadInitialContent();
-                        }
+                const url = GAS_URL + (GAS_URL.includes('?') ? '&' : '?') + 't=' + Date.now();
+                const res = await fetchWithTimeout(url, { cache: 'no-store' }, 12000);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                if (Array.isArray(data) && data.length > 0) {
+                    const serverStr = JSON.stringify(data);
+                    if (JSON.stringify(currentMenus) !== serverStr) {
+                        currentMenus = data;
+                        localStorage.setItem('hunmin_cached_menus', serverStr);
+                        renderNavbar(false);
+                        if (isInitial) loadInitialContent();
                     }
                 }
             } catch (err) {
+                if (retry > 0) return syncFromServer(isInitial, retry - 1);
                 console.log('서버 동기화 건너뜀(캐시 사용):', err.message);
             }
         }
+
+        // 탭을 다시 열거나 창으로 돌아올 때마다 최신 메뉴 확인
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && menuModal.style.display !== 'flex') syncFromServer(false);
+        });
 
         function updateDisplayByMenu(menuObj) {
             const hasValidUrl = menuObj && menuObj.url && menuObj.url.trim() !== '';
