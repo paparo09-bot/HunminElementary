@@ -11,43 +11,40 @@
             display: flex; flex-direction: column; height: 100vh; background-color: #f9fafb;
         }
 
-        /* ===== 상단 메뉴바 (변경된 부분) ===== */
+        /* ===== 상단 메뉴바 (차콜 + 앰버 밑줄) ===== */
         .navbar {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #2563eb 100%);
+            background-color: #1f2937;
             display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.28);
+            padding: 12px 24px; border-bottom: 3px solid #f59e0b;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
             position: relative; z-index: 5;
             flex-shrink: 0; flex-wrap: wrap; gap: 10px;
         }
         .nav-spacer { display: flex; align-items: center; visibility: hidden; user-select: none; padding-right: 16px; }
         .nav-links { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; flex-grow: 1; }
         .nav-links a {
-            display: flex; align-items: center; color: rgba(255, 255, 255, 0.82); text-decoration: none;
-            padding: 8px 18px; border-radius: 999px; font-size: 14.5px; font-weight: 500;
+            display: flex; align-items: center; color: #d1d5db; text-decoration: none;
+            padding: 8px 18px; border-bottom: 2px solid transparent; font-size: 14.5px; font-weight: 500;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .nav-links a:hover { background-color: rgba(255, 255, 255, 0.14); color: #ffffff; }
-        .nav-links a.active-link {
-            background-color: #ffffff; color: #1e3a8a; font-weight: 700;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
-        }
+        .nav-links a:hover { color: #ffffff; border-bottom-color: rgba(255, 255, 255, 0.35); }
+        .nav-links a.active-link { color: #fbbf24; font-weight: 700; border-bottom-color: #fbbf24; }
         .nav-links a:focus-visible, .gear-btn:focus-visible, .switch input:focus-visible + .slider {
             outline: 2px solid #fbbf24; outline-offset: 2px;
         }
-        .right-controls { display: flex; align-items: center; gap: 12px; padding-left: 16px; border-left: 1px solid rgba(255, 255, 255, 0.22); flex-shrink: 0; }
-        .toggle-container { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: rgba(255, 255, 255, 0.9); user-select: none; }
+        .right-controls { display: flex; align-items: center; gap: 12px; padding-left: 16px; border-left: 1px solid rgba(255, 255, 255, 0.2); flex-shrink: 0; }
+        .toggle-container { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: #e5e7eb; user-select: none; }
         .switch { position: relative; display: inline-block; width: 38px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.28); transition: .2s; border-radius: 22px; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #4b5563; transition: .2s; border-radius: 22px; }
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .2s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); }
-        input:checked + .slider { background-color: #fbbf24; }
+        input:checked + .slider { background-color: #f59e0b; }
         input:checked + .slider:before { transform: translateX(16px); }
         .gear-btn {
             background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            width: 34px; height: 34px; border-radius: 8px; color: rgba(255, 255, 255, 0.85); transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 34px; height: 34px; border-radius: 8px; color: #e5e7eb; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .gear-btn:hover { background-color: rgba(255, 255, 255, 0.14); color: #ffffff; transform: rotate(45deg); }
+        .gear-btn:hover { background-color: rgba(255, 255, 255, 0.1); color: #fbbf24; transform: rotate(45deg); }
         /* ===== 상단 메뉴바 끝 ===== */
 
         @media (max-width: 768px) { .nav-spacer { display: none; } }
@@ -139,9 +136,7 @@
             { text: '1. 특별실 예약', url: 'https://docs.google.com/spreadsheets/d/19Mka1E9OB_HW-Gb-_OGEN8CWE2_o9pWKC01RH39SUqA/edit?gid=1784243194#gid=1784243194', openNew: false },
             { text: '2. 개별학생교육', url: 'https://docs.google.com/spreadsheets/d/1WhR1BTbOwF3z4Xk6ZolPjexXWIPRMAhFtvmb8CaOQlE/edit?gid=779125143#gid=779125143', openNew: false },
             { text: '3. 돌봄&방과후', url: 'https://docs.google.com/spreadsheets/d/1QKmvjeODqRzO805KYB4xQdapmPpHoFV2i1McdGvgU-k/edit?gid=214054720#gid=214054720', openNew: false },
-            { text: '4. 연수 자료', url: 'https://padlet.com/paparo09/2026-b4i26qmywba85v35', openNew: false },
-            { text: '5. 활동 사진', url: 'https://drive.google.com/drive/folders/1tv8e9_v6q0I-uG4mpgXmeTQlaKOXWCyD', openNew: true },
-            { text: '6. 학교 홈페이지', url: 'https://hunmin-e.goeujb.kr/hunmin-e/main.do', openNew: true }
+            { text: '4. 연수자료', url: 'https://padlet.com/paparo09/2026-b4i26qmywba85v35', openNew: false }
         ];
 
         let currentMenus = [];
